@@ -96,6 +96,7 @@ public class LoginBox extends JFrame {
 		String sqladdress =null;
 		String sqlpassword = null;
 		String temp = null;
+			//Pulls all SQL login data from args
 		for (int i = 0; i< args.length; i++) {
 			temp=args[i];
 			if (temp.startsWith("user=")) {
@@ -110,6 +111,11 @@ public class LoginBox extends JFrame {
 				System.out.println(sqladdress);
 			}
 		}
-		new LoginBox(sqluser,sqlpassword,sqladdress);
+		if (sqluser!=null && sqladdress !=null && sqlpassword !=null) {
+			new LoginBox(sqluser,sqlpassword,sqladdress);
+		} else {
+			System.out.println("Insufficient SQL information provided");
+		}
+
 	}
 }
