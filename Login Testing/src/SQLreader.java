@@ -8,20 +8,28 @@ import java.sql.Statement;
 public class SQLreader {
 	
   private Connection connect = null;
-  private Statement statement = null;
+  private PreparedStatement statement = null;
   private ResultSet resultSet = null;
-  
+  private String user=null;
+  private String pw=null;
+  private String url=null;
+  public SQLreader(String u, String p, String rl) {
+	  user=u;
+	  pw=p;
+	  url=rl;
+  }
   public boolean evaluateUser(String userInput, String pwInput) throws Exception {
 	    try {
 	    	//Setup DB Connection
 	      Class.forName("com.mysql.cj.jdbc.Driver");
-	      connect =DriverManager.getConnection("jdbc:mysql://localhost:3306/logintable?" +
-	              "user=root&password=$cnrtdz1Scnrtdz1");	    
-	      statement = connect.createStatement();
+	      connect =DriverManager.getConnection("jdbc:mysql://"+url+"/?user="+user+"&password="+pw);	    
+	      statement = connect.prepareStatement("SELECT EXISTS ( SELECT * FROM logintable.users WHERE users = ? AND passwords = ? )");
 	      
-	      // Grab the user from the database and check pw match
-	      resultSet = statement.executeQuery("select * from logintable.users where users=\""+userInput+"\"");
-	      return evaluatePassword(resultSet,pwInput);
+	      // Evaluates a true/false resultset from Exists command
+	      statement.setString(1, userInput);
+	      statement.setString(2, pwInput);
+	      resultSet = statement.executeQuery();
+	      return evaluatePassword(resultSet);
 	    } catch (Exception e) {
 	      throw e;
 	    }finally {
@@ -34,22 +42,22 @@ public class SQLreader {
 	      Class.forName("com.mysql.cj.jdbc.Driver");
 	      connect =DriverManager.getConnection("jdbc:mysql://localhost/logintable?" +
 	              "user=root&password=$cnrtdz1Scnrtdz1");
-	      statement = connect.createStatement();
+	      statement = connect.prepareStatement("INSERT INTO logintable.users VALUES (?,?)");
 	      
 	      //Input given user into DB
-	      statement.executeUpdate("INSERT INTO logintable.users VALUES (\""+user+"\",\""+password+"\")");
+	      statement.setString(1,user);
+	      statement.setString(2, password);
+	      statement.executeUpdate();
 	  } catch (Exception e) {
 		  throw e;
 	  } finally {
 	    	close();
 	    }
   }
-  private boolean evaluatePassword(ResultSet resultSet, String pwInput) throws SQLException{
+  private boolean evaluatePassword(ResultSet resultSet) throws SQLException{
 	  while (resultSet.next()) {
-		  String password = resultSet.getString("passwords");
-		  if (password.equals(pwInput)) {
-			  return true;
-		  }
+		  boolean match = resultSet.getBoolean(1);
+			  return match;
 	  }
 	  return false;
   }
