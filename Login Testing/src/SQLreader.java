@@ -25,7 +25,7 @@ public class SQLreader {
 	      connect =DriverManager.getConnection("jdbc:mysql://"+url+"/?user="+user+"&password="+pw);	    
 	      statement = connect.prepareStatement("SELECT EXISTS ( SELECT * FROM logintable.users WHERE users = ? AND passwords = ? )");
 	      
-	      // Evaluates a true/false resultset from Exists command
+	      // Evaluates a true/false result from Exists command
 	      statement.setString(1, userInput);
 	      statement.setString(2, pwInput);
 	      resultSet = statement.executeQuery();
@@ -69,6 +69,7 @@ public class SQLreader {
       if (statement != null) {
         statement.close();
       }
+      	//Java 11 does not like this close with SSL and current driver edition of JDBC, however it functions correctly, but pops error
       if (connect != null) {
         connect.close();
       }
