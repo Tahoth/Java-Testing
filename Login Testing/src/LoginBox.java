@@ -17,9 +17,9 @@ public class LoginBox extends JFrame {
 	JButton loginButton,signUpButton;
 	SQLreader dbReader;
 		//Constructor
-	LoginBox() {
+	LoginBox(String user, String pw, String url) {
 			//SQL Database Connection
-		dbReader = new SQLreader();
+		dbReader = new SQLreader(user,pw,url);
 			//UI components
 		JFrame frame = new JFrame("Login Box");
 		userLabel = new JLabel("Username");
@@ -92,7 +92,24 @@ public class LoginBox extends JFrame {
 		}
 	}
 	public static void main(String[] args) throws Exception {
-		new LoginBox();
+		String sqluser = null;
+		String sqladdress =null;
+		String sqlpassword = null;
+		String temp = null;
+		for (int i = 0; i< args.length; i++) {
+			temp=args[i];
+			if (temp.startsWith("user=")) {
+				sqluser=temp.substring(5,temp.length());
+				System.out.println(sqluser);
+			} else if (temp.startsWith("pass=")) {
+				sqlpassword=temp.substring(5,temp.length());
+				System.out.println(sqlpassword);
+			}
+			else if (temp.startsWith("url=")) {
+				sqladdress=temp.substring(4,temp.length());
+				System.out.println(sqladdress);
+			}
+		}
+		new LoginBox(sqluser,sqlpassword,sqladdress);
 	}
-
 }
