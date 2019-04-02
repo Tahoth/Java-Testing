@@ -1,0 +1,29 @@
+#Eclipse Stuff#
+###############
+.metadata/
+*.classpath
+*.project
+*.settings/
+# Compiled Source #
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+#Packages#
+##########
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+#Logs and DBs#
+##############
+*.log
+*.sql
+*.sqlite
+
