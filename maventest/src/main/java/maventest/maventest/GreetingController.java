@@ -21,14 +21,17 @@ public class GreetingController {
 	
     @RequestMapping("/login")
     public Greeting greeting(@RequestParam Map<String,String> loginInfo) throws Exception {
+    	//Establishes DB info from properties file
     	dbUser = env.getProperty("dbUser");
     	dbPass = env.getProperty("dbPass");
     	dbURL = env.getProperty("dbURL");
     	dbReader = new SQLreader(dbUser,dbPass,dbURL);
+    	
+    	//Pulls User info from url pass
         String user=loginInfo.get("user");
-        System.out.println(user);
         String pass=loginInfo.get("pass");
-        System.out.println(pass);
-        return new Greeting(dbReader.evaluateUser(user, pass)); //Returns JSON containing login success and login Message 
+
+      //Returns JSON containing login success and login Message 
+        return new Greeting(dbReader.evaluateUser(user, pass)); 
     }
 }
